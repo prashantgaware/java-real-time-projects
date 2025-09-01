@@ -3,9 +3,9 @@ spring:
     name: UserRegistration
 
   datasource:
-    username: root
+    username: ${MYSQL_USERNAME:root}
     password: manager
-    url: jdbc:mysql://localhost:3306/user_registration?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/user_registration?createDatabaseIfNotExist=true
 
   jpa:
     hibernate:

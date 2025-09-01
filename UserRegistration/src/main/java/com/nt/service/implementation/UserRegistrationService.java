@@ -4,7 +4,6 @@ import com.nt.dto.UserDto;
 import com.nt.entity.UserEntity;
 import com.nt.repo.IUserRegistrationRepo;
 import com.nt.service.IUserRegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import java.util.List;
 @Service
 public class UserRegistrationService implements IUserRegistrationService {
 
-    @Autowired
-    private IUserRegistrationRepo userRegistrationRepo;
+    private final IUserRegistrationRepo userRegistrationRepo;
+
+    public UserRegistrationService(IUserRegistrationRepo userRegistrationRepo) {
+        this.userRegistrationRepo = userRegistrationRepo;
+    }
 
     /*public UserRegistrationService(IUserRegistrationRepo userRegistrationRepo) {
         this.userRegistrationRepo = userRegistrationRepo;

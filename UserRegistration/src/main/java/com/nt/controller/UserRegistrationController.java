@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserRegistrationController {
 
-    @Autowired
-    private IUserRegistrationService userRegistrationService;
+    private final IUserRegistrationService userRegistrationService;
+
+    public UserRegistrationController(IUserRegistrationService userRegistrationService) {
+        this.userRegistrationService = userRegistrationService;
+    }
 
     @GetMapping("/get-all")
     public ResponseEntity<List<UserDto>> getUsers() {

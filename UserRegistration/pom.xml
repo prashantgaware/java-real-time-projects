@@ -10,7 +10,7 @@
     </parent>
     <groupId>nit</groupId>
     <artifactId>UserRegistration</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>UserRegistration</name>
     <description>UserRegistration</description>
     <url/>
@@ -60,6 +60,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--<dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>-->
     </dependencies>
 
     <build>
