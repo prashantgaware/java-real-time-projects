@@ -2,6 +2,7 @@ version: "3.9"
 services:
   mysql-db:
     image: mysql
+    container_name: mysql_db
     environment:
       MYSQL_USER: mysql_docker
       MYSQL_PASSWORD: manager
@@ -14,9 +15,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   user-registration:
     image: prashantgaware/user-registration:1.0
+    container_name: user_registration
+    build: .
     ports:
       - '8080:8080'
     restart: 'always'
