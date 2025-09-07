@@ -6,18 +6,20 @@ import com.movie.ticket.booking.service.entities.BookingEntity;
 import com.movie.ticket.booking.service.enums.BookingStatus;
 import com.movie.ticket.booking.service.repositories.BookingRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class BookingServiceImpl implements com.movie.ticket.booking.service.services.BookingService {
 
-    @Autowired
-    private BookingRepository bookingRepository;
+    private final BookingRepository bookingRepository;
+
+    public BookingServiceImpl(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
 
     @Override
-    public String create(BookingDTO bookingDto) {
+    public ResponseDTO create(BookingDTO bookingDto) {
         log.info("create : {}", bookingDto.toString());
         BookingEntity save = bookingRepository.save(
                 BookingEntity.builder()
@@ -31,6 +33,20 @@ public class BookingServiceImpl implements com.movie.ticket.booking.service.serv
                         .build()
         );
 
-        return "Booking created successfully with booking id : " + save.getBookingId();
+        //return "Booking created successfully with booking id : " + save.getBookingId();
+        return ResponseDTO.builder()
+                .bookingDetails(
+                        BookingDTO.builder()
+                                .bookingId(save.getBookingId())
+                                .bookingAmount(save.getBookingAmount())
+                                .bookingStatus(BookingStatus.CONFIRMED)
+                                .seatsSelected(save.getSeatsSelected())
+                                .showDate(save.getShowDate())
+                                .showTime(save.getShowTime())
+                                .userId(save.getUserId())
+                                .movieId(save.getMovieId())
+                                .build()
+                )
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.movie.ticket.booking.service.dtos;
 
+import com.movie.ticket.booking.service.enums.BookingStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +20,7 @@ import java.util.List;
 @Builder
 @Validated
 public class BookingDTO {
+    private UUID bookingId;
 
     @NotNull(message = "Please provide user ID.")
     private String userId;
@@ -38,4 +41,6 @@ public class BookingDTO {
     @NotNull(message = "Booking amount is mandatory.")
     @Positive(message = "Booking amount must be positive.")
     private Double bookingAmount;
+
+    private BookingStatus bookingStatus;
 }
