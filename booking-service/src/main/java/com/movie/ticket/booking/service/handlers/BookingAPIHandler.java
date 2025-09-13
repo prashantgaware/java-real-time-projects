@@ -30,4 +30,18 @@ public class BookingAPIHandler {
                 ).build(),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ResponseDTO> runtimeExceptionHandler(RuntimeException e) {
+        log.info("Entered into BookingAPIHandler runtimeExceptionHandler with the exception: {}", e.getMessage());
+        return new ResponseEntity<>(ResponseDTO.builder()
+                .statusCodeDescription(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .errorMessages(
+                        e.getMessage() != null ?
+                                e.getMessage().lines().collect(Collectors.toList()) :
+                                "Something went wrong".lines().collect(Collectors.toList())
+                ).build(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

@@ -1,5 +1,8 @@
 package com.movie.ticket.booking.service.enums;
 
+import lombok.ToString;
+
+@ToString
 public enum BookingStatus {
     PENDING,
     CONFIRMED,

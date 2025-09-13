@@ -10,7 +10,16 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+stripe:
+  key: sk_test_51S6bysEntyGJ5KmQuUw9CEn7OvK1FwW14j6TixM4Gtr3tU0pwmG4ILG9iyZ8zBVZE0fFqnenOCR9JHO9MkI9re5b002R2a2ET9
+
+dodo:
+  key: ftilVWCrq6fbPJw-.SpUTsdYcOaLTvWhMYJ6P16EzngNnMr-GuqgE29G6pH9RfvCv
+  base-url: https://test.dodopayments.com
+
+  #key: ftilVWCrq6fbPJw-.SpUTsdYcOaLTvWhMYJ6P16EzngNnMr-GuqgE29G6pH9RfvCv

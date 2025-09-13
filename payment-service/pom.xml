@@ -60,6 +60,18 @@
             <version>4.3.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.dodopayments.api/dodo-payments-java -->
+        <dependency>
+            <groupId>com.dodopayments.api</groupId>
+            <artifactId>dodo-payments-java</artifactId>
+            <version>1.37.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>29.5.0</version>
+        </dependency>
     </dependencies>
 
     <build>

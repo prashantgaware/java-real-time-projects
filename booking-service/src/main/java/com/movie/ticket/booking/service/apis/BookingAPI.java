@@ -1,6 +1,6 @@
 package com.movie.ticket.booking.service.apis;
 
-import com.movie.ticket.booking.service.broker.PaymentBroker;
+import com.movie.ticket.booking.service.broker.PaymentServiceBroker;
 import com.movie.ticket.booking.service.dtos.BookingDTO;
 import com.movie.ticket.booking.service.dtos.ResponseDTO;
 import com.movie.ticket.booking.service.services.BookingService;
@@ -21,9 +21,6 @@ public class BookingAPI {
 
     private final BookingService bookingService;
 
-    @Autowired
-    private PaymentBroker paymentBroker;
-
     public BookingAPI(BookingService bookingService) {
         this.bookingService = bookingService;
     }
@@ -32,8 +29,6 @@ public class BookingAPI {
     public ResponseEntity<ResponseDTO> create(@Valid @RequestBody BookingDTO bookingDto) {
         log.info("create : {}", bookingDto.toString());
         // String bookingInfo = bookingService.create(bookingDto);
-        String paymentResponse = paymentBroker.create();
-        log.info("payment : {}", paymentResponse);
         ResponseDTO responseDTO = bookingService.create(bookingDto);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
