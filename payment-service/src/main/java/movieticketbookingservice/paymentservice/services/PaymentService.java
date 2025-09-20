@@ -1,7 +1,8 @@
 package movieticketbookingservice.paymentservice.services;
 
 import movieticketbookingservice.paymentservice.dtos.BookingDTO;
+import movieticketbookingservice.paymentservice.dtos.ResponseDTO;
 
 public interface PaymentService {
-    BookingDTO makePayment(BookingDTO bookingDTO);
+    ResponseDTO makePayment(BookingDTO bookingDTO);
 }

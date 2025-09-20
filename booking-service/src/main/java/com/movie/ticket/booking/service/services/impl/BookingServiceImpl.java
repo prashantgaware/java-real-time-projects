@@ -7,6 +7,7 @@ import com.movie.ticket.booking.service.entities.BookingEntity;
 import com.movie.ticket.booking.service.enums.BookingStatus;
 import com.movie.ticket.booking.service.repositories.BookingRepository;
 import com.movie.ticket.booking.service.services.BookingService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,21 +27,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public ResponseDTO create(BookingDTO bookingDto) {
         log.info("create : {}", bookingDto.toString());
-        BookingEntity bookingEntity = this.bookingRepository.save(
-                BookingEntity.builder()
-                        .movieId(bookingDto.getMovieId())
-                        .bookingAmount(bookingDto.getBookingAmount())
-                        .bookingStatus(BookingStatus.PENDING)
-                        .seatsSelected(bookingDto.getSeatsSelected())
-                        .showDate(bookingDto.getShowDate())
-                        .showTime(bookingDto.getShowTime())
-                        .userId(bookingDto.getUserId())
-                        .build()
-        );
-
-        BookingDTO bookingDTO = paymentServiceBroker.create(
+        BookingEntity bookingEntity = BookingEntity.builder()
+                .movieId(bookingDto.getMovieId())
+                .bookingAmount(bookingDto.getBookingAmount())
+                .bookingStatus(BookingStatus.PENDING)
+                .seatsSelected(bookingDto.getSeatsSelected())
+                .showDate(bookingDto.getShowDate())
+                .showTime(bookingDto.getShowTime())
+                .userId(bookingDto.getUserId())
+                .build();
+        this.bookingRepository.save(bookingEntity);
+        ResponseDTO responseDTO = paymentServiceBroker.create(
                 BookingDTO.builder()
                         .bookingId(bookingEntity.getBookingId())
                         .userId(bookingEntity.getUserId())
@@ -52,18 +52,26 @@ public class BookingServiceImpl implements BookingService {
                         .build()
         );
 
+        if (responseDTO.getBookingDetails().getBookingStatus().equals(BookingStatus.CONFIRMED)) {
+            bookingEntity.setBookingStatus(BookingStatus.CONFIRMED);
+            this.bookingRepository.save(bookingEntity);
+        } else {
+            bookingEntity.setBookingStatus(BookingStatus.CANCELLED);
+            this.bookingRepository.save(bookingEntity);
+        }
+
         //return "Booking created successfully with booking id : " + save.getBookingId();
         return ResponseDTO.builder()
                 .bookingDetails(
                         BookingDTO.builder()
-                                .bookingId(bookingDTO.getBookingId())
-                                .bookingAmount(bookingDTO.getBookingAmount())
-                                .bookingStatus(bookingDTO.getBookingStatus())
-                                .seatsSelected(bookingDTO.getSeatsSelected())
-                                .showDate(bookingDTO.getShowDate())
-                                .showTime(bookingDTO.getShowTime())
-                                .userId(bookingDTO.getUserId())
-                                .movieId(bookingDTO.getMovieId())
+                                .bookingId(responseDTO.getBookingDetails().getBookingId())
+                                .bookingAmount(responseDTO.getBookingDetails().getBookingAmount())
+                                .bookingStatus(responseDTO.getBookingDetails().getBookingStatus())
+                                .seatsSelected(responseDTO.getBookingDetails().getSeatsSelected())
+                                .showDate(responseDTO.getBookingDetails().getShowDate())
+                                .showTime(responseDTO.getBookingDetails().getShowTime())
+                                .userId(responseDTO.getBookingDetails().getUserId())
+                                .movieId(responseDTO.getBookingDetails().getMovieId())
                                 .build()
                 )
                 .build();

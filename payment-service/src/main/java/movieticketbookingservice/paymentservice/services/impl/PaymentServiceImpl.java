@@ -3,6 +3,7 @@ package movieticketbookingservice.paymentservice.services.impl;
 import com.stripe.exception.StripeException;
 import jakarta.transaction.Transactional;
 import movieticketbookingservice.paymentservice.dtos.BookingDTO;
+import movieticketbookingservice.paymentservice.dtos.ResponseDTO;
 import movieticketbookingservice.paymentservice.entities.PaymentEntity;
 import movieticketbookingservice.paymentservice.enums.BookingStatus;
 import movieticketbookingservice.paymentservice.repositories.PaymentRepository;
@@ -63,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackOn = StripeException.class)
-    public BookingDTO makePayment(BookingDTO bookingDTO) {
+    public ResponseDTO makePayment(BookingDTO bookingDTO) {
         bookingDTO = this.stripePaymentGateway.makePayment(bookingDTO);
 
         PaymentEntity paymentEntity = PaymentEntity.builder()
@@ -80,6 +81,8 @@ public class PaymentServiceImpl implements PaymentService {
             paymentEntity.setPaymentDateTime(LocalDateTime.now());
         }
 
-        return bookingDTO;
+        return ResponseDTO.builder()
+                .bookingDetails(bookingDTO)
+                .build();
     }
 }

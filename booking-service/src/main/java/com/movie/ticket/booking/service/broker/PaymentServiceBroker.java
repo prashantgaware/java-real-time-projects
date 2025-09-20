@@ -1,6 +1,7 @@
 package com.movie.ticket.booking.service.broker;
 
 import com.movie.ticket.booking.service.dtos.BookingDTO;
+import com.movie.ticket.booking.service.dtos.ResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -8,6 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface PaymentServiceBroker {
 
     @PostMapping("/payments/create")
-    public BookingDTO create(BookingDTO bookingDTO);
+    ResponseDTO create(BookingDTO bookingDTO);
 
 }
