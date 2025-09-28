@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  bookingsdb:
+    image: mysql
+    container_name: bookings_db
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - '3307:3306'
+    restart: 'always'
+    environment:
+      MYSQL_ROOT_PASSWORD: manager
+      MYSQL_DATABASE: manager
+
+  paymentsdb:
+    image: mysql
+    container_name: payments_db
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - '3308:3306'
+    restart: 'always'
+    environment:
+      MYSQL_ROOT_PASSWORD: manager
+      MYSQL_DATABASE: manager
+
+  booking-service:
+    image: booking-service
+    container_name: booking_service
+    build: ./booking-service
+    ports:
+      - '2020:2020'
+    restart: 'always'
+    depends_on:
+      bookingsdb:
+        condition: service_healthy
+
+  payment-service:
+    image: payment-service
+    container_name: payment_service
+    build: ./payment-service
+    ports:
+      - '2021:2021'
+    restart: 'always'
+    depends_on:
+      paymentsdb:
+        condition: service_healthy
