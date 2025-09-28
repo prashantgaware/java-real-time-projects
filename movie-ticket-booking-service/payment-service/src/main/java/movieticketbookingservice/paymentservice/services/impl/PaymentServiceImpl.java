@@ -9,7 +9,7 @@ import movieticketbookingservice.paymentservice.entities.PaymentEntity;
 import movieticketbookingservice.paymentservice.repositories.PaymentRepository;
 import movieticketbookingservice.paymentservice.services.PaymentService;
 
-import movieticketbookingservice.paymentservice.services.paymentgateway.StripePaymentGateway;
+import movieticketbookingservice.paymentservice.services.paymentgateway.PaymentGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +22,10 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentRepository paymentRepository;
 
     /*@Autowired
-    private DodoPaymentService dodoPaymentService;*/
+    private DodoPaymentGateway dodoPaymentService;*/
 
     @Autowired
-    private StripePaymentGateway stripePaymentGateway;
+    private PaymentGateway paymentGateway;
 
     /*@Override
     @Transactional
@@ -65,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackOn = StripeException.class)
     public ResponseDTO makePayment(BookingDTO bookingDTO) {
-        bookingDTO = this.stripePaymentGateway.makePayment(bookingDTO);
+        bookingDTO = this.paymentGateway.makePayment(bookingDTO);
 
         PaymentEntity paymentEntity = PaymentEntity.builder()
                 .bookingId(bookingDTO.getBookingId())

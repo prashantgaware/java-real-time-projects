@@ -7,27 +7,8 @@
         <artifactId>movie-ticket-booking-service</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>movie-ticket-booking-service</groupId>
     <artifactId>booking-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>booking-service</name>
-    <description>booking-service</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
-    <properties>
-        <java.version>21</java.version>
-    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,7 +22,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -68,39 +48,24 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.movie.ticket.booking.service.commons</groupId>
+            <groupId>com.movie.ticket.booking.service</groupId>
             <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
-    <!--<build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <skip>false</skip>
                 </configuration>
             </plugin>
         </plugins>
-    </build>-->
-
+    </build>
 </project>

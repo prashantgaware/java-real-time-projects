@@ -9,61 +9,66 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.4.4</version> <!-- Changed from 3.5.5 to 3.4.4 -->
         <relativePath />
     </parent>
 
     <modules>
+        <module>commons</module>
         <module>booking-service</module>
         <module>payment-service</module>
-        <module>commons</module>
     </modules>
 
     <groupId>com.movie.ticket.booking.service</groupId>
     <artifactId>movie-ticket-booking-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>movie-ticket-booking-service</name>
+    <description>Movie Ticket Booking Service</description>
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2025.0.0</version> <!-- Use latest compatible version-->
+                <version>2024.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.movie.ticket.booking.service.commons</groupId>
+                <groupId>com.movie.ticket.booking.service</groupId>
                 <artifactId>commons</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!--<build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.5.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>-->
-
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.0</version>
+                    <configuration>
+                        <source>21</source>
+                        <target>21</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>3.4.4</version> <!-- Updated to match Spring Boot version -->
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

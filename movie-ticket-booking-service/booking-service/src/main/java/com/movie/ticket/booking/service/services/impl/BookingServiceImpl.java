@@ -20,11 +20,12 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private PaymentServiceBroker paymentServiceBroker;
 
-    private final BookingRepository bookingRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
 
-    public BookingServiceImpl(BookingRepository bookingRepository) {
+    /*public BookingServiceImpl(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
-    }
+    }*/
 
     @Override
     @Transactional

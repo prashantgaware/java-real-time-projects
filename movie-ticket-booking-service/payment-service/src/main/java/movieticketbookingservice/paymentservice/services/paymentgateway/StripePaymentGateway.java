@@ -8,6 +8,7 @@ import com.stripe.model.Charge;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,7 +16,8 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class StripePaymentGateway {
+@Primary
+public class StripePaymentGateway implements PaymentGateway {
 
     @Value(value = "${stripe.key}")
     private String secretKey;

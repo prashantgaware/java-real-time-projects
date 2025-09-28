@@ -1,6 +1,5 @@
 package com.movie.ticket.booking.service.services;
 
-
 import com.movie.ticket.booking.service.commons.dtos.BookingDTO;
 import com.movie.ticket.booking.service.commons.dtos.ResponseDTO;
 
