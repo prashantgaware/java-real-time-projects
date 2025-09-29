@@ -43,6 +43,10 @@ services:
     depends_on:
       bookingsdb:
         condition: service_healthy
+    environment:
+      MYSQL_HOST: bookingsdb
+      DB_NAME: bookings
+      PAYMENT_SERVICE_URL: payment-service
 
   payment-service:
     image: payment-service
@@ -54,3 +58,33 @@ services:
     depends_on:
       paymentsdb:
         condition: service_healthy
+    environment:
+      MYSQL_HOST: paymentsdb
+      DB_NAME: payments
+
+  api-gateway:
+    image: api-gateway
+    container_name: api_gateway
+    build: ./api-gateway
+    ports:
+      - '8765:8765'
+    restart: 'always'
+    depends_on:
+      movie-services-registry:
+        condition: service_healthy
+    environment:
+      EUREKA_SERVER: movie-services-registry
+
+  movie-services-registry:
+    image: movie-services-registry
+    container_name: movie_services_registry
+    build: ./movie-services-registry
+    ports:
+      - '8761:8761'
+    restart: 'always'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

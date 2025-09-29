@@ -15,6 +15,8 @@
 
     <modules>
         <module>commons</module>
+        <module>api-gateway</module>
+        <module>movie-services-registry</module>
         <module>booking-service</module>
         <module>payment-service</module>
     </modules>

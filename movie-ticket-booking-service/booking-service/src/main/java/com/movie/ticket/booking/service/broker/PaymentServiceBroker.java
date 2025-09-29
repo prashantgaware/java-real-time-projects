@@ -5,7 +5,7 @@ import com.movie.ticket.booking.service.commons.dtos.ResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "payment-service", url = "http://payment-service:2021")
+@FeignClient(name = "payment-service", url = "http://${PAYMENT_SERVICE_URL:localhost}:2021")
 public interface PaymentServiceBroker {
 
     @PostMapping("/payments/create")
