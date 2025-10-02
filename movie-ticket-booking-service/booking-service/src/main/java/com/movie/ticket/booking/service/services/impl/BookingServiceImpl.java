@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -26,6 +28,15 @@ public class BookingServiceImpl implements BookingService {
     /*public BookingServiceImpl(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }*/
+
+    @Override
+    public List<String> getBookings() {
+        return List.of(
+                "Booking1",
+                "Booking2",
+                "Booking3"
+        );
+    }
 
     @Override
     @Transactional
