@@ -9,11 +9,21 @@ spring:
             id: booking-service
             uri: lb://booking-service
             predicates:
-              - Path=/booking/**
+              - Path=/bookings/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: bookingServiceCircuitBreaker
+                  fallbackUri: forward:/bookingServiceFallBack
           routes[1]:
             id: payment-service
             uri: lb://payment-service
             predicates:
-              - Path=/payment/**
+              - Path=/payments/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: paymentServiceCircuitBreaker
+                  fallbackUri: forward:/paymentServiceFallBack
 server:
   port: 8765
