@@ -1,0 +1,112 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
+      - "./volumes/zookeeper/log:/var/lib/zookeeper/log"
+
+  kafka-broker-1:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka-broker-1 # <--- FIX: Renamed for clarity
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # <--- FIX: Correctly defined internal and external listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:19092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-1:19092,EXTERNAL://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # --- End of Fix ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    volumes:
+      - "./volumes/kafka-broker-1/data:/var/lib/kafka/data"
+
+  kafka-broker-2:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka-broker-2 # <--- FIX: Renamed for clarity
+    ports:
+      - "9093:9093" # <--- FIX: Using a unique host port
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # <--- FIX: Correctly defined internal and external listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:19092,EXTERNAL://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-2:19092,EXTERNAL://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # --- End of Fix ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    volumes:
+      - "./volumes/kafka-broker-2/data:/var/lib/kafka/data"
+
+  kafka-broker-3:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka-broker-3 # <--- FIX: Renamed for clarity
+    ports:
+      - "9094:9094" # <--- FIX: Using a unique host port
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # <--- FIX: Correctly defined internal and external listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:19092,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-3:19092,EXTERNAL://localhost:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # --- End of Fix ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    volumes:
+      - "./volumes/kafka-broker-3/data:/var/lib/kafka/data"
+
+  kafka-manager:
+    image: hlebalbau/kafka-manager:latest
+    container_name: kafka-manager
+    ports:
+      - "9000:9000"
+    depends_on:
+      - zookeeper
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
+    environment:
+      ZK_HOSTS: "zookeeper:2181"
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.0.1
+    container_name: schema-registry
+    ports:
+      - "8081:8081"
+    depends_on:
+      - zookeeper
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      # <--- FIX: Provide all brokers for high availability, using the INTERNAL listener
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'INTERNAL://kafka-broker-1:19092,INTERNAL://kafka-broker-2:19092,INTERNAL://kafka-broker-3:19092'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081

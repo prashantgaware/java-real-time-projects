@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  init_kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: init-kafka
+    environment:
+      KAFKA_BROKER_ID: 99
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://init-kafka:9092,PLAINTEXT_HOST://localhost:9099
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_LOG_FLUSH_INTERVAL_MESSAGES: 10000
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: init-kafka
+      KAFKA_HEAP_OPTS: "-Xms512M -Xmx512M"
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+    command: >
+      bash -c "
+        # block until kafka is reachable
+        kakfa-topics --bootstrap-server kafka-broker-1:9092 --list;
+      
+        echo e 'Deleting topics if they exist...';
+        kafka-topics --delete --topic payment-response --if-exists --bootstrap-server kafka-broker-1:9092;
+        kafka-topics --delete --topic payment-request --if-exists --bootstrap-server kafka-broker-1:9092;
+        echo 'Topics deleted if they existed.';
+        # wait until topics are really deleted
+        sleep 10;
+        # block until kafka is reachable
+        echo 'Re-checking Kafka availability...';
+        kafka-topics --bootstrap-server kafka-broker-1:9092 --list;
+        # wait until kafka is really ready to accept requests
+        echo 'Waiting for Kafka to be ready...';
+        cub kafka-ready -b kafka-broker-1:9092 1 20;
+        echo 'Creating topics...';
+        kafka-topics --create --topic payment-response --partitions 3 --replication-factor 3 --if-not-exists --bootstrap-server kafka-broker-1:9092;
+        kafka-topics --create --topic payment-response --partitions 3 --replication-factor 3 --if-not-exists --bootstrap-server kafka-broker-1:9092;
+        echo 'Topics created.';
+      "
+    ports:
+      - "9099:9099"
+    volumes:
+      - "./volumes/init-kafka/data:/var/lib/kafka/data"
+      - "./volumes/init-kafka/translation:/var/lib/kafka/logs"
+    restart: "no"
